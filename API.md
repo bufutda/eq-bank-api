@@ -96,7 +96,7 @@ If the credentials are accepted, but further authentication is required, then `i
     }
   ]
 }
-``
+```
 
 ### 3. Stepup
 ##### Request
