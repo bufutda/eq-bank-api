@@ -96,8 +96,7 @@ If the credentials are accepted, but further authentication is required, then `i
     }
   ]
 }
-```
-If a security question is required, `isStepupRequired` will be `true` and the security question details will be in `stepupConfiguration`.
+``
 
 ### 3. Stepup
 ##### Request
