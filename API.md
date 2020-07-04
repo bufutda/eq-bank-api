@@ -110,7 +110,7 @@ PUT /login/stepup
 | JSON Body | sessionReferenceId | WTew3F3...dv26tYf | Yes | `sessionReferenceId` from the stepup response in step 2 |
 | JSON Body | stepupConfiguration.questionAnswer | sheep | Yes | The answer to the question posed in `stepupConfiguration.challengedQuestion` |
 | JSON Body | stepupConfiguration.questionCode | QA_107 | Yes | `stepupConfiguration.questionCode` |
-| JSON Body | steupConfiguration.trustDevice | true | Yes | Boolean whether to ask security questions for this device in a future login |
+| JSON Body | stepupConfiguration.trustDevice | true | Yes | Boolean whether to ask security questions for this device in a future login |
 
 #### Response
 ```json
