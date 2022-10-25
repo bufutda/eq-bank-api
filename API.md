@@ -54,7 +54,7 @@ POST /loginmgmt/v2.0.0/vs1/login
 
 | Source | Parameter Name | Example | Required | Description |
 | - | - | - | - | - |
-| Header | clientVersion | 2.2.0 | No | The version of the application running. |
+| Header | clientVersion | 2.3.34 | No | The version of the application running. |
 | Header | clientOS | android | No | The operating system of the client. |
 | JSON Body | TMSessionId | ffffffffffffffffffffffffffffffff | Yes | UUID Version 4 with no dashes |
 | JSON Body | email | me@example.com | Yes | The email of the account |
@@ -123,7 +123,7 @@ PUT /loginmgmt/v2.0.0/vs1/login/stepup
 | JSON Body | email | me@example.com | Yes | The email of the account |
 | JSON Body | sessionReferenceId | WTew3F3...dv26tYf | Yes | `sessionReferenceId` from the stepup response in step 2 |
 | JSON Body | stepupConfiguration.PIN | 123456 | Yes | The One-Time-Password delivered to you |
-| JSON Body | stepupConfiguration.stepupType | OTP | Yes | `stepupConfiguration.questionCode` |
+| JSON Body | stepupConfiguration.stepupType | OTP | Yes | One-Time-Password |
 | JSON Body | stepupConfiguration.trustDevice | true | Yes | Boolean whether to ask security questions for this device in a future login |
 
 #### Response
