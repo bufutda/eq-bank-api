@@ -26,7 +26,7 @@ GET /compliance/clientApp
 
 | Source | Parameter Name | Example | Required | Description |
 | - | - | - | - | - |
-| Header | clientVersion | 2.2.0 | No | The version of the application running. If it is too outdated, the response will signal that an update is required. |
+| Header | clientVersion | 2.3.34 | No | The version of the application running. If it is too outdated, the response will signal that an update is required. |
 | Header | clientOS | android | Yes | The operating system of the client. |
 
 ##### Response
