@@ -10,7 +10,7 @@ Every request includes an authorization and correlation header:
 
 | Header | Value | Description |
 | - | - | - |
-| Authorization | Basic Njdj...BZjU= | This doesn't appear to change but I don't know if it's deduced from personal information so I have redacted it. |
+| Authorization | Basic NjdjZjI5Yjc3MmIwNGI3NGFiYTcxYmViOGQzOTljMjQ6N2VBMDUzNjczMjdjNDU2M0IwQzRiYkQ5MDkzQkFBZjU= | This doesn't appear to change. |
 | correlationId | Generated UUID Version 4 | |
 
 #### Rate Limiting
@@ -49,7 +49,7 @@ Otherwise,
 
 ##### Request
 ```
-POST /login
+POST /loginmgmt/v2.0.0/vs1/login
 ```
 
 | Source | Parameter Name | Example | Required | Description |
@@ -84,24 +84,26 @@ If the credentials are accepted, but further authentication is required, then `i
     "questionCode": "QA_107",
     "stepupType": "CHALLENGED_QUESTION"
   },
-  "isTMSessionDetected": false,
-  "features": [
-    {
-      "feature": "transferwise",
-      "enabled": true
-    },
-    {
-      "feature": "automatedReferrals",
-      "enabled": true
+  "isTMSessionDetected": false
+}
+```
+```json
+{
+    "isStepupRequired": true,
+    "isTMSessionDetected": false,
+    "sessionReferenceId": "WTew3F3...dv26tYf",
+    "stepupConfiguration": {
+        "channel": "EMAIL",
+        "stepupType": "OTP"
     }
-  ]
 }
 ```
 
-### 3. Stepup
-##### Request
+
+### 3. Stepup 
+##### Request (Security Question)
 ```
-PUT /login/stepup
+PUT /loginmgmt/v2.0.0/vs1/login/stepup
 ```
 
 | Source | Parameter Name | Example | Required | Description |
@@ -112,48 +114,142 @@ PUT /login/stepup
 | JSON Body | stepupConfiguration.questionCode | QA_107 | Yes | `stepupConfiguration.questionCode` |
 | JSON Body | stepupConfiguration.trustDevice | true | Yes | Boolean whether to ask security questions for this device in a future login |
 
+##### Request (OTP)
+```
+PUT /loginmgmt/v2.0.0/vs1/login/stepup
+```
+| Source | Parameter Name | Example | Required | Description |
+| - | - | - | - | - |
+| JSON Body | email | me@example.com | Yes | The email of the account |
+| JSON Body | sessionReferenceId | WTew3F3...dv26tYf | Yes | `sessionReferenceId` from the stepup response in step 2 |
+| JSON Body | stepupConfiguration.PIN | 123456 | Yes | The One-Time-Password delivered to you |
+| JSON Body | stepupConfiguration.stepupType | OTP | Yes | `stepupConfiguration.questionCode` |
+| JSON Body | stepupConfiguration.trustDevice | true | Yes | Boolean whether to ask security questions for this device in a future login |
+
 #### Response
 ```json
 {
     "accessToken": "eyJhbG...ykrczKdYY",
     "data": {
         "dashboard": {
-            "accounts": {
-                "GIC": [],
-                "HISA": [
-                    {
-                        "accountName": "My HISA",
-                        "accountNumber": "100000000",
-                        "accountOpeningMonthYear": "072020",
-                        "arrangementId": "AA202070VGG2",
-                        "availableBalance": 0,
-                        "currentBalance": 0,
-                        "goalAmount": 0,
-                        "goalStatus": "INACTIVE",
-                        "postingRestriction": false,
-                        "rate": 2
-                    }
-                ],
-                "Joint": [],
-                "availableBalance": 0,
-                "totalBalance": 0
-            }
+            "accounts": [
+                {
+                    "productType": "HISA",
+                    "accountType": "HISA",
+                    "accountNumber": "100000000",
+                    "accountName": "John Doe",
+                    "primaryCustomerName": null,
+                    "currency": "CAD",
+                    "currentBalance": 1000.00,
+                    "availableBalance": 1000.00,
+                    "goalStatus": "INACTIVE",
+                    "goalAmount": 0,
+                    "goalTargetDate": null,
+                    "rate": 2.5,
+                    "postingRestriction": false,
+                    "postingRestrictionReason": null,
+                    "accountOpeningMonthYear": "072020",
+                    "accountOpeningDate": "2020-07-04",
+                    "arrangementId": "AA202070VGG2",
+                    "interestEarnedLastMonth": null,
+                    "co-owners": [],
+                    "cards": null,
+                    "relatedAccount": null
+                },
+                ...
+            ],
+            "totalsCurrency": [
+                {
+                    "currency": "CAD",
+                    "currentBalance": 1000.00,
+                    "availableBalance": 1000.00
+                }
+            ],
+            "totalsProductType": [
+                {
+                    "currency": "CAD",
+                    "currentBalance": 1000.00,
+                    "availableBalance": 1000.00,
+                    "productType": "HISA"
+                },
+                {
+                    "currency": "CAD",
+                    "currentBalance": 1000.00,
+                    "availableBalance": 1000.00,
+                    "productType": "GIC"
+                },
+                ...
+            ],
+            "totalsAccountType": [
+                {
+                    "currency": "CAD",
+                    "currentBalance": 1000.00,
+                    "availableBalance": 1000.00,
+                    "productType": "HISA",
+                    "accountType": "HISA"
+                },
+                {
+                    "currency": "CAD",
+                    "currentBalance": 1000.00,
+                    "availableBalance": 1000,
+                    "productType": "GIC",
+                    "accountType": "GIC"
+                },
+                ...
+            ]
         },
         "loginDetails": {
             "customerId": "000000",
             "customerName": "John Doe",
-            "lastSignInDate": "12:36 PM ET - 3 Jul 2020"
+            "lastSignInDate": "12:36 PM ET - 3 Jul 2020",
+            "mnemonic": "0000000",
+        },
+        "customerDetails": {
+            "firstName": "John",
+            "middleName": null,
+            "lastName": "Doe",
+            "address1": "123 Example Street Nw",
+            "address2": null,
+            "city": "Exampleton",
+            "province": "QC",
+            "postalCode": "ABC123",
+            "otherNo": "12345678910",
+            "mobileNo": "12345678910",
+            "email": "JDOE@EXAMPLE.COM",
+            "dateOfBirth": "1970-01-01",
+            "occupation": "Software Engineer - Information Technology and Communications",
+            "poBox": null
         },
         "sequenceNumber": 420
     },
     "features": [
         {
-            "enabled": true,
-            "feature": "transferwise"
+            "feature": "transferwise",
+            "enabled": true
         },
         {
-            "enabled": true,
-            "feature": "automatedReferrals"
+            "feature": "automatedReferrals",
+            "enabled": true
+        },
+        {
+            "feature": "rrsp",
+            "enabled": true
+        },
+        {
+            "feature": "mgm",
+            "enabled": true
+        },
+        {
+            "feature": "tfsa",
+            "enabled": true
+        },
+        {
+            "feature": "usd",
+            "enabled": true
+        },
+        {
+            "feature": "ppc",
+            "enabled": false
         }
     ],
     "isReviewRequired": false,
